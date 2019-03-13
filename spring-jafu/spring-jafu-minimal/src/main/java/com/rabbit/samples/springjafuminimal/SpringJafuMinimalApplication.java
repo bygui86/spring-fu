@@ -18,7 +18,8 @@ public class SpringJafuMinimalApplication {
 									webFluxServerDsl ->
 											webFluxServerDsl.router(
 													routerBuilder ->
-															routerBuilder.GET("/", request -> ok().syncBody("Hello world!"))
+															routerBuilder
+																	.GET("/", request -> ok().syncBody("Hello world!"))
 									)
 							)
 					)

@@ -14,41 +14,76 @@ import reactor.core.publisher.Mono;
  */
 public class UserRepositoryImpl implements UserRepository {
 
-	private final DatabaseClient client;
+	private final DatabaseClient databaseClient;
 
-	public UserRepositoryImpl(DatabaseClient client) {
-		this.client = client;
+	public UserRepositoryImpl(DatabaseClient databaseClient) {
+		this.databaseClient = databaseClient;
 	}
 
 	@Override
 	public Mono<Integer> count() {
-		return client.execute().sql("SELECT COUNT(*) FROM users").as(Integer.class).fetch().one();
+
+		return databaseClient
+				.execute()
+				.sql("SELECT COUNT(*) FROM users")
+				.as(Integer.class)
+				.fetch()
+				.one();
 	}
 
 	@Override
 	public Flux<User> findAll() {
-		return client.select().from("users").as(User.class).fetch().all();
+
+		return databaseClient
+				.select()
+				.from("users")
+				.as(User.class)
+				.fetch()
+				.all();
 	}
 
 	@Override
-	public Mono<User> findOne(String id) {
-		return client.execute().sql("SELECT * FROM users WHERE login = $1").bind(1, id).as(User.class).fetch().one();
+	public Mono<User> findById(final String id) {
+
+		return databaseClient
+				.execute()
+				.sql("SELECT * FROM users WHERE login = $1")
+				.bind(1, id)
+				.as(User.class)
+				.fetch()
+				.one();
 	}
 
 	@Override
 	public Mono<Void> deleteAll() {
-		return client.execute().sql("DELETE FROM users").fetch().one().then();
+
+		return databaseClient
+				.execute()
+				.sql("DELETE FROM users")
+				.fetch()
+				.one()
+				.then();
 	}
 
 	@Override
-	public Mono<String> save(User user) {
-		return client.insert().into(User.class).table("users").using(user)
-				.map((r, m) -> r.get("login", String.class)).one();
+	public Mono<String> save(final User user) {
+
+		return databaseClient
+				.insert()
+				.into(User.class)
+				.table("users")
+				.using(user)
+				.map((row, rowMetadata) -> row.get("login", String.class))
+				.one();
 	}
 
 	@Override
 	public void init() {
-		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").then()
+
+		databaseClient
+				.execute()
+				.sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);")
+				.then()
 				.then(deleteAll())
 				.then(save(new User("johnd", "John","Doe")))
 				.then(save(new User("janed", "Jane","Doe")))

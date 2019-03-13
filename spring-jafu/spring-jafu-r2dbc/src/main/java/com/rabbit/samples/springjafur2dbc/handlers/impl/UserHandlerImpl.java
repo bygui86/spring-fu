@@ -8,6 +8,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+
 
 /**
  * @author Matteo Baiguini
@@ -16,17 +18,32 @@ import reactor.core.publisher.Mono;
  */
 public class UserHandlerImpl implements UserHandler {
 
-	private final UserRepository repository;
+	private final UserRepository userRepository;
 
-	public UserHandlerImpl(final UserRepository repository) {
-		this.repository = repository;
+	public UserHandlerImpl(final UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Override
 	public Mono<ServerResponse> findAll(final ServerRequest request) {
-		return ServerResponse.ok()
+
+		return ok()
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(repository.findAll(), User.class);
+				.body(userRepository.findAll(), User.class);
+	}
+
+	@Override
+	public Mono<ServerResponse> save(final ServerRequest request) {
+
+		// return ServerResponse.ok()
+		// 		.contentType(MediaType.APPLICATION_JSON_UTF8)
+		// 		.body(userRepository.save(request.bodyToMono(User.class)), String.class);
+		//
+		// final Mono<User> mono = request.bodyToMono(User.class)
+
+		// ok().build()
+
+		return null;
 	}
 
 }

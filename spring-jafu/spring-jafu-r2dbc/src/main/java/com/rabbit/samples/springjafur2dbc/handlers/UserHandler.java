@@ -14,4 +14,6 @@ public interface UserHandler {
 
 	Mono<ServerResponse> findAll(final ServerRequest request);
 
+	Mono<ServerResponse> save(final ServerRequest request);
+
 }

@@ -16,7 +16,7 @@ public interface UserRepository {
 
 	Flux<User> findAll();
 
-	Mono<User> findOne(final String id);
+	Mono<User> findById(final String id);
 
 	Mono<Void> deleteAll();
 
