@@ -1,0 +1,17 @@
+[
+	{
+		"name": "com.rabbit.samples.springjafuminimal.services.SampleService",
+		"allDeclaredConstructors" : true,
+		"allDeclaredMethods": true
+	},
+	{
+		"name": "com.rabbit.samples.springjafuminimal.handlers.SampleHandler",
+		"allDeclaredConstructors" : true,
+		"allDeclaredMethods": true
+	},
+	{
+		"name": "com.rabbit.samples.springjafuminimal.domain.Sample",
+		"allDeclaredConstructors" : true,
+		"allDeclaredMethods": true
+	}
+]

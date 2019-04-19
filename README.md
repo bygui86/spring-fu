@@ -5,13 +5,13 @@
 
 Spring Fu sample projects:
 * Jafu
-	* Minimal
-	* MongoDB - `WORK IN PROGRESS`
-	* R2DBC
+	- [x] Minimal
+	- [ ] MongoDB - `WORK IN PROGRESS`
+	- [ ] R2DBC - `WORK IN PROGRESS`
 * Kofu
-	* Minimal - `TODO`
-	* MongoDB - `TODO`
-	* R2DBC - `TODO`
+	- [ ] Minimal
+	- [ ] MongoDB
+	- [ ] R2DBC
 
 ---
 
@@ -24,20 +24,38 @@ Spring Fu sample projects:
 
 ---
 
-## Run sample
+## Run
 
-Start application
-```
-cd <PROJECT_ROOT_FOLDER>/<SUB_PROJECT_FOLDER>
-mvnw clean package spring-boot:run
-```
+### JaFu
+
+* Start `minimal` sample
+	```
+	cd spring-jafu/spring-jafu-minimal
+	mvnw clean package spring-boot:run
+	```
+
+* Start `mongodb` sample 
+	```
+	cd spring-jafu/spring-jafu-mongodb
+	mvnw clean package spring-boot:run
+	```
+
+* Start `r2dbc` sample 
+	```
+	cd spring-jafu/spring-jafu-r2dbc
+	mvnw clean package spring-boot:run
+	```
+
+### KoFu
+
+`TODO`
 
 ---
 
 ## TODOs
 
-* introduce Lombok
-* natively compile with GraalVM
+- [x] introduce Lombok
+- [ ] natively compile with GraalVM
 
 ---
 
@@ -47,13 +65,11 @@ mvnw clean package spring-boot:run
 * https://spring.io/blog/2018/10/02/the-evolution-of-spring-fu
 
 ### Jafu
-
 * https://github.com/spring-projects/spring-fu/blob/master/jafu/README.adoc
 * https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-minimal
 * https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-r2dbc
 
 ### Kofu
-
 * https://github.com/spring-projects/spring-fu/blob/master/kofu/README.adoc
 * https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-minimal
 * https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-r2dbc
@@ -62,5 +78,4 @@ mvnw clean package spring-boot:run
 * https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-mongodb
 
 ### APT plugin demo
-
 * https://github.com/dsyer/spring-init-experiment
