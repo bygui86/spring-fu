@@ -2,6 +2,11 @@ package com.rabbit.samples.springjafur2dbc.repos.impl;
 
 import com.rabbit.samples.springjafur2dbc.domain.User;
 import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.function.DatabaseClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,21 +17,23 @@ import reactor.core.publisher.Mono;
  * matteo@solidarchitectures.com
  * 16 Feb 2019
  */
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter(AccessLevel.PROTECTED)
 public class UserRepositoryImpl implements UserRepository {
 
-	private final DatabaseClient databaseClient;
-
-	public UserRepositoryImpl(DatabaseClient databaseClient) {
-		this.databaseClient = databaseClient;
-	}
+	DatabaseClient databaseClient;
 
 	@Override
-	public Mono<Integer> count() {
+	public Mono<Long> count() {
 
-		return databaseClient
+		log.debug("count users");
+
+		return getDatabaseClient()
 				.execute()
 				.sql("SELECT COUNT(*) FROM users")
-				.as(Integer.class)
+				.as(Long.class)
 				.fetch()
 				.one();
 	}
@@ -34,7 +41,9 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Flux<User> findAll() {
 
-		return databaseClient
+		log.debug("find all users");
+
+		return getDatabaseClient()
 				.select()
 				.from("users")
 				.as(User.class)
@@ -45,19 +54,37 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Mono<User> findById(final String id) {
 
-		return databaseClient
+		log.debug("find user by id {}", id);
+
+		return getDatabaseClient()
 				.execute()
 				.sql("SELECT * FROM users WHERE login = $1")
-				.bind(1, id)
+				.bind(0, id)
 				.as(User.class)
 				.fetch()
 				.one();
 	}
 
 	@Override
+	public Mono<String> save(final User user) {
+
+		log.debug("save user {}", user);
+
+		return getDatabaseClient()
+				.insert()
+				.into(User.class)
+				.table("users")
+				.using(user)
+				.map((r, m) -> r.get("login", String.class))
+				.one();
+	}
+
+	@Override
 	public Mono<Void> deleteAll() {
 
-		return databaseClient
+		log.debug("delete all users");
+
+		return getDatabaseClient()
 				.execute()
 				.sql("DELETE FROM users")
 				.fetch()
@@ -66,21 +93,11 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Mono<String> save(final User user) {
-
-		return databaseClient
-				.insert()
-				.into(User.class)
-				.table("users")
-				.using(user)
-				.map((row, rowMetadata) -> row.get("login", String.class))
-				.one();
-	}
-
-	@Override
 	public void init() {
 
-		databaseClient
+		log.debug("init db");
+
+		getDatabaseClient()
 				.execute()
 				.sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);")
 				.then()

@@ -1,25 +1,27 @@
 package com.rabbit.samples.springjafur2dbc;
 
 
-import com.rabbit.samples.springjafur2dbc.configs.Configurations;
+import com.rabbit.samples.springjafur2dbc.configs.DataConfig;
+import com.rabbit.samples.springjafur2dbc.configs.WebConfig;
 import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.fu.jafu.JafuApplication;
 
-import static org.springframework.fu.jafu.Jafu.webApplication;
+import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 
 
 public class SpringJafuR2dbcApplication {
 
-	private static JafuApplication jafuApplication = webApplication(
+	private static JafuApplication jafuApplication = reactiveWebApplication(
 
 			applicationDsl ->
 					applicationDsl
-							.enable(Configurations.dataConfig)
-							.enable(Configurations.webConfig)
+							.enable(DataConfig.dataConfig)
+							.enable(WebConfig.webConfig)
 							.listener(
 									ApplicationReadyEvent.class,
-									applicationEvent -> applicationDsl.ref(UserRepository.class).init()
+									applicationEvent ->
+											applicationDsl.ref(UserRepository.class).init()
 							)
 	);
 

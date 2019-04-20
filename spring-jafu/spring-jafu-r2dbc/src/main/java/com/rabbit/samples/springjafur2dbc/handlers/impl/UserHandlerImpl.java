@@ -3,6 +3,11 @@ package com.rabbit.samples.springjafur2dbc.handlers.impl;
 import com.rabbit.samples.springjafur2dbc.domain.User;
 import com.rabbit.samples.springjafur2dbc.handlers.UserHandler;
 import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -16,34 +21,74 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
  * matteo@solidarchitectures.com
  * 16 Feb 2019
  */
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter(AccessLevel.PROTECTED)
 public class UserHandlerImpl implements UserHandler {
 
-	private final UserRepository userRepository;
+	UserRepository userRepository;
 
-	public UserHandlerImpl(final UserRepository userRepository) {
-		this.userRepository = userRepository;
+	@Override
+	public Mono<ServerResponse> count(final ServerRequest request) {
+
+		log.info("count users");
+
+		return ok()
+				.body(
+						getUserRepository().count(),
+						Long.class
+				);
 	}
 
 	@Override
 	public Mono<ServerResponse> findAll(final ServerRequest request) {
 
+		log.info("find all users");
+
 		return ok()
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(userRepository.findAll(), User.class);
+				.contentType(MediaType.APPLICATION_STREAM_JSON)
+				.body(
+						getUserRepository().findAll(),
+						User.class
+				);
+	}
+
+	@Override
+	public Mono<ServerResponse> findById(final ServerRequest request) {
+
+		String id = request.pathVariable("id");
+
+		log.info("find user by id {}", id);
+
+		return ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(
+						getUserRepository().findById(id),
+						User.class
+				);
 	}
 
 	@Override
 	public Mono<ServerResponse> save(final ServerRequest request) {
 
-		// return ServerResponse.ok()
-		// 		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		// 		.body(userRepository.save(request.bodyToMono(User.class)), String.class);
-		//
-		// final Mono<User> mono = request.bodyToMono(User.class)
+		log.info("save user");
 
-		// ok().build()
+		return ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(
+						request.bodyToMono(User.class).doOnNext(getUserRepository()::save),
+						User.class
+				);
+	}
 
-		return null;
+	@Override
+	public Mono<ServerResponse> deleteAll(final ServerRequest request) {
+
+		log.info("delete all users");
+
+		getUserRepository().deleteAll();
+		return ok().build();
 	}
 
 }

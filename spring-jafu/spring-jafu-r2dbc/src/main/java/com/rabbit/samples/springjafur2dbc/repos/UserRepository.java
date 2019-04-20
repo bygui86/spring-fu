@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
  */
 public interface UserRepository {
 
-	Mono<Integer> count();
+	Mono<Long> count();
 
 	Flux<User> findAll();
 
@@ -20,7 +20,7 @@ public interface UserRepository {
 
 	Mono<Void> deleteAll();
 
-	Mono<String> save(User user);
+	Mono<String> save(final User user);
 
 	void init();
 

@@ -12,8 +12,14 @@ import reactor.core.publisher.Mono;
  */
 public interface UserHandler {
 
+	Mono<ServerResponse> count(final ServerRequest request);
+
 	Mono<ServerResponse> findAll(final ServerRequest request);
 
+	Mono<ServerResponse> findById(final ServerRequest request);
+
 	Mono<ServerResponse> save(final ServerRequest request);
+
+	Mono<ServerResponse> deleteAll(final ServerRequest request);
 
 }
