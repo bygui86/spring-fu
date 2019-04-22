@@ -45,6 +45,7 @@
 ## TODOs
 
 - [x] introduce Lombok
+- [x] testing
 - [ ] natively compile with GraalVM
 
 ---

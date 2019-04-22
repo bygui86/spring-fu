@@ -18,7 +18,7 @@ public interface UserRepository {
 
 	Flux<User> saveAll(final Flux<User> users);
 
-	Mono<String> save(final Mono<User> user);
+	Mono<User> save(final Mono<User> user);
 
 	Mono<Void> deleteAll();
 

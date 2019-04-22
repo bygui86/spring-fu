@@ -26,8 +26,9 @@ public class DataConfig {
 											beanDefinitionDsl.bean(UserRepositoryImpl.class)
 							)
 							.enable(
-									reactiveMongo()
-									// reactiveMongo(ReactiveMongoDsl::embedded)
+									configurationDsl.profiles().contains("mongo")
+											? reactiveMongo()
+											: reactiveMongo(ReactiveMongoDsl::embedded)
 							)
 							.listener(
 									ApplicationReadyEvent.class,

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -79,7 +80,7 @@ public class UserHandlerImpl implements UserHandler {
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(
 						getUserRepository().save(request.bodyToMono(User.class)),
-						String.class
+						User.class
 				);
 	}
 
@@ -90,7 +91,7 @@ public class UserHandlerImpl implements UserHandler {
 
 		return ok()
 				.build(
-						getUserRepository().deleteAll().then()
+						getUserRepository().deleteAll()
 				);
 	}
 

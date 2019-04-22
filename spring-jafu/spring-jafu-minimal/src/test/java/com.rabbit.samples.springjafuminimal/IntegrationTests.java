@@ -1,5 +1,6 @@
 package com.rabbit.samples.springjafuminimal;
 
+import com.rabbit.samples.springjafuminimal.domain.Sample;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,25 +13,26 @@ import org.springframework.test.web.reactive.server.WebTestClient;
  * matteo@solidarchitectures.com
  * 20 Apr 2019
  */
-public class SpringJafuMinimalIntegrationTests {
+class IntegrationTests {
 
-	private WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build();
+	private WebTestClient webTestClient =
+			WebTestClient.bindToServer().baseUrl("http://localhost:8181").build();
 
 	private ConfigurableApplicationContext context;
 
 	@BeforeAll
-	public void beforeAll() {
+	void setUp() {
 
 		context = SpringJafuMinimalApplication.jafuApplication.run("test");
 	}
 
 	@Test
-	public void requestRootEndpoint() {
+	void requestRootEndpoint() {
 
 		// given
 		// -
 
-		client
+		webTestClient
 				// when
 				.get()
 				.uri("/")
@@ -38,16 +40,17 @@ public class SpringJafuMinimalIntegrationTests {
 
 				// then
 				.expectStatus().is2xxSuccessful()
-				.expectBody(String.class).isEqualTo("Hello world!");
+				.expectBody(String.class).isEqualTo("Hello world!")
+		;
 	}
 
 	@Test
-	public void requestApiEndpoint() {
+	void requestApiEndpoint() {
 
 		// given
 		// -
 
-		client
+		webTestClient
 				// when
 				.get()
 				.uri("/api")
@@ -55,11 +58,14 @@ public class SpringJafuMinimalIntegrationTests {
 
 				// then
 				.expectStatus().is2xxSuccessful()
-				.expectBody(String.class).isEqualTo("{\"message\":\"Hello world!\"}");
+				.expectBody(Sample.class).isEqualTo(
+						Sample.builder().message("Hello world!").build()
+				)
+		;
 	}
 
 	@AfterAll
-	void afterAll() {
+	void tearDown() {
 
 		context.close();
 	}

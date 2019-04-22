@@ -25,8 +25,11 @@ public class DataConfig {
 									beanDefinitionDsl ->
 											beanDefinitionDsl.bean(UserRepositoryImpl.class)
 							)
-							.enable(r2dbcH2())
-							// .enable(r2dbcPostgresql())
+							.enable(
+									configurationDsl.profiles().contains("postgres")
+											? r2dbcPostgresql()
+											: r2dbcH2()
+							)
 							.listener(
 									ApplicationReadyEvent.class,
 									applicationEvent ->

@@ -28,7 +28,9 @@ public class WebConfig {
 											webFluxServerDsl -> {
 												webFluxServerDsl
 														.port(
-																webFluxServerDsl.profiles().contains("test") ? 8181 : 8080
+																webFluxServerDsl.profiles().contains("test")
+																		? 8181
+																		: 8080
 														)
 														.router(
 																routerBuilder -> {

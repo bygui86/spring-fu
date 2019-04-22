@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -70,9 +71,8 @@ public class UserRepositoryImpl implements UserRepository {
 		);
 	}
 
-	// TODO return User instead of String
 	@Override
-	public Mono<String> save(final Mono<User> user) {
+	public Mono<User> save(final Mono<User> user) {
 
 		log.debug("save user {}", user);
 
@@ -81,9 +81,8 @@ public class UserRepositoryImpl implements UserRepository {
 				.into(User.class)
 				.table("users")
 				.using(user)
-				.map((row, rowMetadata) -> row.get("login", String.class))
-				.one()
-				;
+				.map((row, rowMetadata) -> row.get("login", User.class))
+				.one();
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 
 public class SpringJafuR2dbcApplication {
 
-	private static JafuApplication jafuApplication = reactiveWebApplication(
+	static JafuApplication jafuApplication = reactiveWebApplication(
 
 			applicationDsl ->
 					applicationDsl
