@@ -1,8 +1,9 @@
-package com.rabbit.samples.springjafur2dbc.handlers.impl;
+package com.rabbit.samples.springjafumongodb.handlers.impl;
 
-import com.rabbit.samples.springjafur2dbc.domain.User;
-import com.rabbit.samples.springjafur2dbc.handlers.UserHandler;
-import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
+import com.mongodb.client.result.DeleteResult;
+import com.rabbit.samples.springjafumongodb.domain.User;
+import com.rabbit.samples.springjafumongodb.handlers.UserHandler;
+import com.rabbit.samples.springjafumongodb.repos.UserRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,7 +61,7 @@ public class UserHandlerImpl implements UserHandler {
 	@Override
 	public Mono<ServerResponse> saveAll(final ServerRequest request) {
 
-		log.info("save users");
+		log.info("save user");
 
 		return ok()
 				.contentType(MediaType.APPLICATION_STREAM_JSON)
@@ -79,7 +80,7 @@ public class UserHandlerImpl implements UserHandler {
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(
 						getUserRepository().save(request.bodyToMono(User.class)),
-						String.class
+						User.class
 				);
 	}
 
@@ -89,8 +90,10 @@ public class UserHandlerImpl implements UserHandler {
 		log.info("delete all users");
 
 		return ok()
-				.build(
-						getUserRepository().deleteAll().then()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(
+						getUserRepository().deleteAll(),
+						DeleteResult.class
 				);
 	}
 
@@ -99,11 +102,13 @@ public class UserHandlerImpl implements UserHandler {
 
 		String id = request.pathVariable("id");
 
-		log.info("find user by id {}", id);
+		log.info("delete user by id {}", id);
 
 		return ok()
-				.build(
-						getUserRepository().deleteById(id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(
+						getUserRepository().deleteById(id),
+						DeleteResult.class
 				);
 	}
 

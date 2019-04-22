@@ -1,16 +1,19 @@
-package com.rabbit.samples.springjafur2dbc.repos.impl;
+package com.rabbit.samples.springjafumongodb.repos.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbit.samples.springjafur2dbc.domain.User;
-import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
+import com.mongodb.client.result.DeleteResult;
+import com.rabbit.samples.springjafumongodb.domain.User;
+import com.rabbit.samples.springjafumongodb.repos.UserRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.r2dbc.function.DatabaseClient;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +32,7 @@ import java.util.List;
 @Getter(AccessLevel.PROTECTED)
 public class UserRepositoryImpl implements UserRepository {
 
-	DatabaseClient databaseClient;
+	ReactiveMongoOperations reactiveMongoOperations;
 
 	ObjectMapper objectMapper;
 
@@ -38,12 +41,8 @@ public class UserRepositoryImpl implements UserRepository {
 
 		log.debug("find all users");
 
-		return getDatabaseClient()
-				.select()
-				.from("users")
-				.as(User.class)
-				.fetch()
-				.all();
+		return getReactiveMongoOperations()
+				.findAll(User.class);
 	}
 
 	@Override
@@ -51,13 +50,8 @@ public class UserRepositoryImpl implements UserRepository {
 
 		log.debug("find user by id {}", id);
 
-		return getDatabaseClient()
-				.execute()
-				.sql("SELECT * FROM users WHERE login = $1")
-				.bind(0, id)
-				.as(User.class)
-				.fetch()
-				.one();
+		return getReactiveMongoOperations()
+				.findById(id, User.class);
 	}
 
 	@Override
@@ -70,47 +64,38 @@ public class UserRepositoryImpl implements UserRepository {
 		);
 	}
 
-	// TODO return User instead of String
 	@Override
-	public Mono<String> save(final Mono<User> user) {
+	public Mono<User> save(final Mono<User> user) {
 
-		log.debug("save user {}", user);
+		log.info("save user {}", user);
 
-		return getDatabaseClient()
-				.insert()
-				.into(User.class)
-				.table("users")
-				.using(user)
-				.map((row, rowMetadata) -> row.get("login", String.class))
-				.one()
-				;
+		return getReactiveMongoOperations()
+				.save(user)
+		;
 	}
 
 	@Override
-	public Mono<Void> deleteAll() {
+	public Mono<DeleteResult> deleteAll() {
 
 		log.debug("delete all users");
 
-		return getDatabaseClient()
-				.execute()
-				.sql("DELETE FROM users")
-				.fetch()
-				.one()
-				.then();
+		return getReactiveMongoOperations()
+				.remove(User.class)
+				.all()
+		;
 	}
 
 	@Override
-	public Mono<Void> deleteById(final String id) {
+	public Mono<DeleteResult> deleteById(final String id) {
 
 		log.debug("delete user by id {}", id);
 
-		return getDatabaseClient()
-				.execute()
-				.sql("DELETE FROM users WHERE login = $1")
-				.bind(0, id)
-				.fetch()
-				.one()
-				.then();
+		return getReactiveMongoOperations()
+				.remove(
+						Query.query(Criteria.where("login").is(id)),
+						User.class
+				)
+		;
 	}
 
 	@Override
@@ -119,20 +104,11 @@ public class UserRepositoryImpl implements UserRepository {
 		try {
 			log.debug("init db");
 
+			deleteAll().block();
+
 			final ClassPathResource resource = new ClassPathResource("data/users.json");
 			List<User> users = getObjectMapper().readValue(resource.getInputStream(), new TypeReference<List<User>>() {});
-
-			getDatabaseClient()
-					.execute()
-					.sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);")
-					.then()
-					.thenMany(
-							saveAll(
-									Flux.fromIterable(users)
-							)
-					).subscribe();
-
-
+			saveAll(Flux.fromIterable(users)).subscribe();
 		} catch (IOException e) {
 			log.error("Error occurred initializing db: {}", e.getMessage());
 		}

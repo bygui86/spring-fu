@@ -1,14 +1,14 @@
-package com.rabbit.samples.springjafur2dbc.configs;
+package com.rabbit.samples.springjafumongodb.configs;
 
-import com.rabbit.samples.springjafur2dbc.repos.UserRepository;
-import com.rabbit.samples.springjafur2dbc.repos.impl.UserRepositoryImpl;
+import com.rabbit.samples.springjafumongodb.repos.UserRepository;
+import com.rabbit.samples.springjafumongodb.repos.impl.UserRepositoryImpl;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.fu.jafu.ConfigurationDsl;
+import org.springframework.fu.jafu.mongo.ReactiveMongoDsl;
 
 import java.util.function.Consumer;
 
-import static org.springframework.fu.jafu.r2dbc.H2R2dbcDsl.r2dbcH2;
-import static org.springframework.fu.jafu.r2dbc.PostgresqlR2dbcDsl.r2dbcPostgresql;
+import static org.springframework.fu.jafu.mongo.ReactiveMongoDsl.reactiveMongo;
 
 
 /**
@@ -25,8 +25,10 @@ public class DataConfig {
 									beanDefinitionDsl ->
 											beanDefinitionDsl.bean(UserRepositoryImpl.class)
 							)
-							.enable(r2dbcH2())
-							// .enable(r2dbcPostgresql())
+							.enable(
+									reactiveMongo()
+									// reactiveMongo(ReactiveMongoDsl::embedded)
+							)
 							.listener(
 									ApplicationReadyEvent.class,
 									applicationEvent ->

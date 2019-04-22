@@ -3,24 +3,14 @@
 
 ## Sub-projects
 
-Spring Fu sample projects:
 * Jafu
 	- [x] Minimal
-	- [ ] MongoDB - `WORK IN PROGRESS`
-	- [ ] R2DBC - `WORK IN PROGRESS`
+	- [x] MongoDB
+	- [x] R2DBC
 * Kofu
 	- [ ] Minimal
 	- [ ] MongoDB
 	- [ ] R2DBC
-
----
-
-## Prerequisites
-
-* Maven pom
-	* Spring Reactive Web dependency 
-	* Spring Milestones repository
-	* Spring Fu dependency (current version 0.0.5)
 
 ---
 

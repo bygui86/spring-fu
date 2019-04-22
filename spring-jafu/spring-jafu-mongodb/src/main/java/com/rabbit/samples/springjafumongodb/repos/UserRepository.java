@@ -1,6 +1,7 @@
-package com.rabbit.samples.springjafur2dbc.repos;
+package com.rabbit.samples.springjafumongodb.repos;
 
-import com.rabbit.samples.springjafur2dbc.domain.User;
+import com.mongodb.client.result.DeleteResult;
+import com.rabbit.samples.springjafumongodb.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,11 +19,11 @@ public interface UserRepository {
 
 	Flux<User> saveAll(final Flux<User> users);
 
-	Mono<String> save(final Mono<User> user);
+	Mono<User> save(final Mono<User> user);
 
-	Mono<Void> deleteAll();
+	Mono<DeleteResult> deleteAll();
 
-	Mono<Void> deleteById(final String id);
+	Mono<DeleteResult> deleteById(final String id);
 
 	void init();
 

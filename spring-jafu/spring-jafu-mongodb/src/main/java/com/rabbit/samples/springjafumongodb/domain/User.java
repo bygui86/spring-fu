@@ -1,4 +1,4 @@
-package com.rabbit.samples.springjafur2dbc.domain;
+package com.rabbit.samples.springjafumongodb.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 /**
@@ -23,6 +24,7 @@ import org.springframework.data.annotation.Id;
 @EqualsAndHashCode
 @ToString
 @Builder
+@Document
 public class User {
 
 	@Id

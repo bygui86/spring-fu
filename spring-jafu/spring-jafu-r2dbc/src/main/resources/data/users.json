@@ -1,0 +1,17 @@
+[
+	{
+		"login": "johnd",
+		"firstname": "john",
+		"lastname": "doe"
+	},
+	{
+		"login": "janed",
+		"firstname": "jane",
+		"lastname": "doe"
+	},
+	{
+		"login": "mattb",
+		"firstname": "matteo",
+		"lastname": "baiguini"
+	}
+]

@@ -1,7 +1,7 @@
-package com.rabbit.samples.springjafur2dbc.configs;
+package com.rabbit.samples.springjafumongodb.configs;
 
-import com.rabbit.samples.springjafur2dbc.handlers.UserHandler;
-import com.rabbit.samples.springjafur2dbc.handlers.impl.UserHandlerImpl;
+import com.rabbit.samples.springjafumongodb.handlers.UserHandler;
+import com.rabbit.samples.springjafumongodb.handlers.impl.UserHandlerImpl;
 import org.springframework.fu.jafu.ConfigurationDsl;
 
 import java.util.function.Consumer;

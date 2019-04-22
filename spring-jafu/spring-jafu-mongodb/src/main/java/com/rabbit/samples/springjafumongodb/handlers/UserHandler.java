@@ -1,4 +1,4 @@
-package com.rabbit.samples.springjafur2dbc.handlers;
+package com.rabbit.samples.springjafumongodb.handlers;
 
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
